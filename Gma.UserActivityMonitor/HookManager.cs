@@ -99,6 +99,8 @@ namespace Gma.UserActivityMonitor
             }
         }
 
+        public static bool DisableMouseDownUpEvent { get; set; }
+
         private static event MouseEventExtHandler s_MouseDown;
 
         /// <summary>

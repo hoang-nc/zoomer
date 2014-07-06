@@ -16,9 +16,7 @@ namespace Zoomer
 
         private static bool ZmStarted = false;
         private static bool ZmMouseRightIsDown = false;
-        private static bool ZmVirtualLControlIsDown = false;
-
-        private static bool ZmIgnoreMouseHandle = false;
+        private static bool ZmVirtualControlIsDown = false;
 
         private static InputSimulator ZmInSim = new InputSimulator();
 
@@ -35,18 +33,17 @@ namespace Zoomer
                 HookManager.MouseDown += HookManager_MouseDown;
                 HookManager.MouseUp += HookManager_MouseUp;
                 HookManager.MouseWheel += HookManager_MouseWheel;
+                HookManager.DisableMouseDownUpEvent = false;
 
+                ZmTimerSendRightClick.AutoReset = false;
                 ZmTimerSendRightClick.Elapsed += ZmTimerSendRightClick_Elapsed;
 
                 ZmInSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.LCONTROL);
                 ZmInSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LCONTROL);
                 ZmMouseRightIsDown = false;
-                ZmVirtualLControlIsDown = false;
+                ZmVirtualControlIsDown = false;
 
                 ZmStarted = true;
-#if DEBUG
-                Debug.WriteLine("Zoomer started");
-#endif
             }
         }
 
@@ -71,15 +68,13 @@ namespace Zoomer
 
         private static void ZmTimerSendRightClick_Elapsed(object sender, ElapsedEventArgs e)
         {
-            ZmIgnoreMouseHandle = true;
+            HookManager.DisableMouseDownUpEvent = true;
             ZmInSim.Mouse.RightButtonClick();
-            ZmIgnoreMouseHandle = false;
-            ZmTimerSendRightClick.Stop();
+            HookManager.DisableMouseDownUpEvent = false;
         }
 
         private static void HookManager_MouseDown(object sender, MouseEventExtArgs e)
         {
-            if (ZmIgnoreMouseHandle) return;
             if (e.Button == MouseButtons.Right)
             {
                 ZmMouseRightIsDown = true;
@@ -89,33 +84,31 @@ namespace Zoomer
 
         private static void HookManager_MouseUp(object sender, MouseEventExtArgs e)
         {
-            if (ZmIgnoreMouseHandle) return;
             if (e.Button == MouseButtons.Right)
             {
-                if (ZmVirtualLControlIsDown)
+                ZmMouseRightIsDown = false;
+                e.Handled = true;
+                if (ZmVirtualControlIsDown)
                 {
-                    ZmInSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LCONTROL);
-                    ZmVirtualLControlIsDown = false;
+                    ZmInSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.RCONTROL);
+                    ZmVirtualControlIsDown = false;
                 }
                 else
                 {
                     ZmTimerSendRightClick.Start();
                 }
-                ZmMouseRightIsDown = false;
-                e.Handled = true;
             }
         }
 
 
         private static void HookManager_MouseWheel(object sender, MouseEventExtArgs e)
         {
-            if (ZmIgnoreMouseHandle) return;
             if (ZmMouseRightIsDown)
             {
-                if (!ZmVirtualLControlIsDown)
+                if (!ZmVirtualControlIsDown)
                 {
-                    ZmInSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.LCONTROL);
-                    ZmVirtualLControlIsDown = true;
+                    ZmInSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.RCONTROL);
+                    ZmVirtualControlIsDown = true;
                 }
             }
         }

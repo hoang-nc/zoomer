@@ -152,17 +152,22 @@ namespace Gma.UserActivityMonitor
                                                    mouseHookStruct.Point.X,
                                                    mouseHookStruct.Point.Y,
                                                    mouseDelta);
-
-                //Mouse up
-                if (s_MouseUp!=null && mouseUp)
+                /* Added by Zoomer */
+                if (!DisableMouseDownUpEvent)
                 {
-                    s_MouseUp.Invoke(null, e);
-                }
+                    //Mouse up
+                    if (s_MouseUp != null && mouseUp)
+                    {
+                        /* Modified by Zoomer */
+                        s_MouseUp(null, e);
+                    }
 
-                //Mouse down
-                if (s_MouseDown != null && mouseDown)
-                {
-                    s_MouseDown.Invoke(null, e);
+                    //Mouse down
+                    if (s_MouseDown != null && mouseDown)
+                    {
+                        /* Modified by Zoomer */
+                        s_MouseDown(null, e);
+                    }
                 }
                 /* Disable by Zoomer
                 //If someone listens to click and a click is heppened
