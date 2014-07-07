@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
@@ -9,6 +10,16 @@ namespace Zoomer
 {
     static class Program
     {
+
+        [DllImport("psapi.dll")]
+        static extern int EmptyWorkingSet(IntPtr hwProc);
+
+        static void MinimizeFootprint()
+        {
+            EmptyWorkingSet(Process.GetCurrentProcess().Handle);
+        }
+
+
         private static System.Timers.Timer PTimerGC = new System.Timers.Timer(5 * 60 * 1000);
         private static System.Windows.Forms.NotifyIcon PNotifyIcon = new System.Windows.Forms.NotifyIcon();
         private static Mutex mutex = new Mutex(true, "{86199e51-7152-4c54-b7a5-4d9c325e1343}");
@@ -29,6 +40,7 @@ namespace Zoomer
 
                 ShowNotifyIcon();
 
+                MinimizeFootprint();
                 Application.Run();
             }
         }
