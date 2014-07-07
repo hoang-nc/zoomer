@@ -51,7 +51,7 @@ namespace Zoomer
 
         private static void MenuInfomation_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/nchoang/Zoomer/wiki");
+            Process.Start("http://nchoang.github.io/zoomer");
         }
 
         static void PTimerGC_Elapsed(object sender, ElapsedEventArgs e)

@@ -136,8 +136,8 @@ namespace Gma.UserActivityMonitor
                         //One wheel click is defined as WHEEL_DELTA, which is 120. 
                         //(value >> 16) & 0xffff; retrieves the high-order word from the given 32-bit value
                         mouseDelta = (short)((mouseHookStruct.MouseData >> 16) & 0xffff);
-                       
-                    //TODO: X BUTTONS (I havent them so was unable to test)
+
+                        //TODO: X BUTTONS (I havent them so was unable to test)
                         //If the message is WM_XBUTTONDOWN, WM_XBUTTONUP, WM_XBUTTONDBLCLK, WM_NCXBUTTONDOWN, WM_NCXBUTTONUP, 
                         //or WM_NCXBUTTONDBLCLK, the high-order word specifies which X button was pressed or released, 
                         //and the low-order word is reserved. This value can be one or more of the following values. 
@@ -190,9 +190,10 @@ namespace Gma.UserActivityMonitor
                 */
 
                 //Wheel was moved
-                if (s_MouseWheel!=null && mouseDelta!=0)
+                if (s_MouseWheel != null && mouseDelta != 0)
                 {
-                    s_MouseWheel.Invoke(null, e);
+                    /* Modified by Zoomer */
+                    s_MouseWheel(null, e);
                 }
 
                 /* Disable by Zoomer
@@ -261,8 +262,13 @@ namespace Gma.UserActivityMonitor
                 s_MouseMoveExt == null &&
                 s_MouseWheel == null)
             {
-                ForceUnsunscribeFromGlobalMouseEvents();
+                try
+                {
+                    ForceUnsunscribeFromGlobalMouseEvents();
+                }
+                catch { }
             }
+
         }
 
         private static void ForceUnsunscribeFromGlobalMouseEvents()
@@ -285,7 +291,7 @@ namespace Gma.UserActivityMonitor
                 }
             }
         }
-        
+
         #endregion
 
         //##############################################################################
