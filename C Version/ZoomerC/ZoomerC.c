@@ -26,7 +26,7 @@ volatile BOOL gSendingRClick = FALSE;
 volatile UINT WM_TASKBARCREATED; 
 
 static char SINGLE_WINDOWS_TITLE[] = "9907567546";
-#define START_INFO_URL "start http://nchoang.github.io/zoomer"
+#define START_INFO_URL "start /I http://nchoang.github.io/zoomer"
 
 static INPUT gKeyboardRCtrlDown = {
 	INPUT_KEYBOARD,		/*	type */
